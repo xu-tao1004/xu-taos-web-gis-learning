@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>OpenLayers加载自定义QGIS切片</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.js"></script>
+  <style>
+    #map {
+      width: 100%;
+      height: 800px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    // 1. 定义切片的坐标系（根据QGIS元数据填写，通常是EPSG:3857或EPSG:4326）
+    const projection = 'EPSG:3857';
+
+    // 2. 创建自定义切片源
+    const customSource = new ol.source.TileImage({
+      projection: projection,
+      // 瓦片大小（QGIS切片通常是256x256像素）
+      tileSize: [256, 256],
+      // 自定义瓦片URL生成函数（核心：将OpenLayers的瓦片坐标转换为你的文件路径）
+      tileUrlFunction: function(tileCoord) {
+        if (!tileCoord) {
+          return null; // 无效坐标返回空
+        }
+
+        // tileCoord格式：[z, x, y]（OpenLayers内部坐标）
+        const z = tileCoord[0]; // 层级
+        let x = tileCoord[1];   // 列号（可能需要转换）
+        let y = tileCoord[2];   // 行号（可能需要转换）
+
+        // --------------------------
+        // 关键：根据你的切片命名规则修改这里
+        // --------------------------
+        // 示例1：如果路径是 "tiles/z/行号/列号.png"
+        // 假设QGIS的行号 = y，列号 = x（需根据实际文件夹名调整）
+        const zFolder = z;       // 层级文件夹名
+        const rowFolder = y;     // 行文件夹名（替换为你的实际规则）
+        const colFile = x + '.png'; // 列文件名（替换为你的实际规则）
+
+        // 拼接路径（根据你的实际文件夹结构修改）
+        return `./file:///E:/XT工作/1振扬/切片/新建文件夹 (3)/${zFolder}/${rowFolder}/${colFile}`;
+
+
+        // 示例2：如果文件名是 "tiles/z_行_列.png"（如"tiles/5_100_200.png"）
+        // return `./tiles/${z}_${y}_${x}.png`;
+
+        // 示例3：如果QGIS的Y轴与OpenLayers相反（瓦片倒置），可添加反转
+        // y = Math.pow(2, z) - 1 - y; // TMS格式常用的Y轴反转公式
+      },
+      // 切片的最大/最小层级（根据你的切片实际范围填写）
+      minZoom: 15,
+      maxZoom: 20
+    });
+
+    // 3. 创建图层
+    const tileLayer = new ol.layer.Tile({
+      source: customSource
+    });
+
+    // 4. 创建地图（初始中心点需替换为你的切片范围中心）
+    const map = new ol.Map({
+      target: 'map',
+      layers: [tileLayer],
+      view: new ol.View({
+        projection: projection,
+        // 替换为你的切片对应的经纬度中心（例如：北京附近）
+        center: ol.proj.fromLonLat([29.7888, 115.531]),
+        zoom: 17 // 初始层级（需在你的切片minZoom和maxZoom范围内）
+      })
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>OpenLayers加载QGIS切片</title>
+  <!-- 引入OpenLayers库 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.js"></script>
+  <style>
+    /* 地图容器样式 */
+    #map {
+      width: 100%;
+      height: 800px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    // 1. 配置切片源（关键步骤）
+    const tileSource = new ol.source.XYZ({
+      // 瓦片的URL模板，根据QGIS切片的实际路径修改
+      // 注意：{z}表示层级，{x}表示列，{y}表示行
+      url: 'tiles/{z}/{x}/{y}.png',  // 假设切片放在当前目录的tiles文件夹下
+      
+      
+      
+      // 切片的坐标系（通常为EPSG:3857，与QGIS默认切片坐标系一致）
+      projection: 'EPSG:3857',
+      
+      // 可选：设置切片的最大/最小层级（根据QGIS切片的实际层级设置）
+      maxZoom: 20,
+      minZoom: 15
+    });
+
+    // 2. 创建图层
+    const tileLayer = new ol.layer.Tile({
+      source: tileSource
+    });
+
+    // 3. 创建地图并指定初始视图（根据切片的实际范围调整中心点和层级）
+    const map = new ol.Map({
+      target: 'map',  // 绑定到id为map的div
+      layers: [tileLayer],  // 添加切片图层
+      view: new ol.View({
+        projection: 'EPSG:3857',
+        // 初始中心点（示例：北京附近的坐标，需替换为你的切片范围中心）
+        center: ol.proj.fromLonLat([115.531, 29.7888]),  // [经度, 纬度]
+        zoom: 17  // 初始层级（根据你的切片层级设置）
+      })
+    });
+  </script>
+</body>
+</html>
