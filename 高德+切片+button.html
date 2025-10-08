@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>图层控制 - 本地切片叠加高德地图</title>
+  <title>图层控制 - github切片叠加高德地图</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.css" />
   <script src="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.js"></script>
   <!-- 引入Font Awesome图标库（用于按钮图标） -->
@@ -77,9 +77,9 @@
       visible: true  // 初始可见
     });
 
-    // 2. 本地切片图层
+    // 2. github切片图层
     const localTileSource = new ol.source.XYZ({
-      url: '新建文件夹 (3)/{z}/{x}/{y}.png',
+      url: 'https://xu-tao.github.io/xu-taos-web-gis-learning/新建文件夹 (3)/{z}/{x}/{y}.png',
       projection: 'EPSG:3857',
       maxZoom: 20,
       minZoom: 15,
@@ -89,7 +89,7 @@
         const x = tileCoord[1];
         let y = tileCoord[2];
         y = -y - 1;  // 根据实际切片调整
-        return `新建文件夹 (3)/${z}/${x}/${y}.png`;
+        return `https://xu-tao.github.io/xu-taos-web-gis-learning/新建文件夹 (3)/${z}/${x}/${y}.png`;
       }
     });
 
