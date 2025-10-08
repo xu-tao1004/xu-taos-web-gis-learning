@@ -79,7 +79,7 @@
 
     // 2. github切片图层
     const localTileSource = new ol.source.XYZ({
-      url: 'https://xu-tao.github.io/xu-taos-web-gis-learning/新建文件夹 (3)/{z}/{x}/{y}.png',
+      url: 'https://xu-tao1004.github.io/xu-taos-web-gis-learning/新建文件夹 (3)/{z}/{x}/{y}.png',
       projection: 'EPSG:3857',
       maxZoom: 20,
       minZoom: 15,
@@ -89,7 +89,7 @@
         const x = tileCoord[1];
         let y = tileCoord[2];
         y = -y - 1;  // 根据实际切片调整
-        return `https://xu-tao.github.io/xu-taos-web-gis-learning/新建文件夹 (3)/${z}/${x}/${y}.png`;
+        return `https://xu-tao1004.github.io/xu-taos-web-gis-learning/新建文件夹 (3)/${z}/${x}/${y}.png`;
       }
     });
 
